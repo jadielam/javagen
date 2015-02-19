@@ -56,6 +56,31 @@ public class JClass extends JavaTemplateGroup {
 		}
 	}
 	
+	public JClass setPublic(){
+		
+		return this;
+	}
+	
+	public JClass setPrivate(){
+		
+		return this;
+		
+	}
+	
+	public JClass setProtected(){
+	
+		return this;
+	}
+	
+	public JClass addSuperclass(String extendedClass){
+		
+		return this;
+	}
+	
+	public JClass addInterface(String iMterface){
+		//interesting challenge here.
+		return this;
+	}
 	
 	public JConstructor addConstructor(String vissibilityModifier, 
 			List<Pair<String, String>> someFunctionArguments){
