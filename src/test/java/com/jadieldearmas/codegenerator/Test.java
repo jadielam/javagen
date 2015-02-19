@@ -13,12 +13,11 @@ package com.jadieldearmas.codegenerator;
  *
  * @since  
  */
-public class JImport extends JavaTemplateGroup {
+public class Test {
 
-	JImport(String importName){
+	public static void main(String [] args){
 		
-		super("inport");
-		this.updatePlaceholder("importName", importName);
+		JCompilationUnit cu = JCompilationUnit.createCompilationUnit("Testing");
 		
 	}
 }

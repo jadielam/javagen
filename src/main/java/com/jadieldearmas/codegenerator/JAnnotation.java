@@ -28,10 +28,9 @@ public class JAnnotation extends JavaTemplateGroup {
 	 */
 	JAnnotation(String name, List<Pair<String, String>> someAttributeValues){
 		
-		super();
-		this.template = super.getInstanceOf("annotation");
-		this.template.add("name", name);
-		
+		super("annotation");
+		this.updatePlaceholder("name", name);
+				
 		if (null != someAttributeValues && 0 < someAttributeValues.size()){
 			for (Pair<String, String> attributeValue : someAttributeValues){
 				ST attributeValueTemplate = super.getInstanceOf("attributeValue");
@@ -39,7 +38,7 @@ public class JAnnotation extends JavaTemplateGroup {
 				String value = attributeValue.getSecond();
 				attributeValueTemplate.add("attribute", attribute);
 				attributeValueTemplate.add("value", value);
-				this.template.add("attributeValue", attributeValueTemplate.render());
+				this.addPlaceholder("attributeValue", attributeValueTemplate.render());
 			}
 		}
 		

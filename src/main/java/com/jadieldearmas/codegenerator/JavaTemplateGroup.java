@@ -10,9 +10,11 @@ package com.jadieldearmas.codegenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -47,15 +49,24 @@ public abstract class JavaTemplateGroup {
 	 * adds new vissibility modifiers to a method, only the last value entered is valid.
 	 */
 	Map<String, String> placeholderUpdate = new HashMap<String, String>();
+	
+	/**
+	 * This map is used for all the templates that can hold more than one value, but that
+	 * the value cannot be repeated twice.  For example, the moethod template will contain 
+	 * a placeholder called interface, and its value contains a list of interfaces
+	 * that the class implements.  The same for function arguments and exceptions.
+	 */
+	Map<String, Set<String>> placeholderAdd = new HashMap<String, Set<String>>();
+	
 	/**
 	 * This field most be hidden and initialized by the child classes
 	 */
-	ST template;
+	private ST template;
 	
-	JavaTemplateGroup(){
+	JavaTemplateGroup(String templateName){
 		
 		this.javaGroup = new STGroupFile("java.stg");
-		
+		this.template = getInstanceOf(templateName);
 	}
 	
 	public ST getInstanceOf(String template){
@@ -68,6 +79,18 @@ public abstract class JavaTemplateGroup {
 	
 	void updatePlaceholder(String placeholderName, String placeholderValue){
 		this.placeholderUpdate.put(placeholderName, placeholderValue);
+	}
+	
+	void addPlaceholder(String placeholderName, String placeholderValue){
+		if (this.placeholderAdd.containsKey(placeholderName)){
+			Set<String> values = this.placeholderAdd.get(placeholderName);
+			values.add(placeholderValue);
+		}
+		else{
+			Set<String> values = new HashSet<String>();
+			values.add(placeholderValue);
+			this.placeholderAdd.put(placeholderName, values);
+		}
 	}
 	
 	void addNewChildTemplate(String templateName, JavaTemplateGroup template){
@@ -106,11 +129,22 @@ public abstract class JavaTemplateGroup {
 				
 				this.template.add(placeholderName, placeholderValue);
 			}
+			
+			//Adding the repeated placeholders
+			for (Entry<String, Set<String>> e : this.placeholderAdd.entrySet()){
+				String placeholderName = e.getKey();
+				Set<String> values = e.getValue();
+				
+				for (String value : values){
+					this.template.add(placeholderName, value);
+				}
+			}
+			
 			this.isCompiled = true;
 		}
 	}
 	
-	/**
+	/**s
 	 * 
 	 */
 	@Override

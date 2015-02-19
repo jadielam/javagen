@@ -15,5 +15,13 @@ package com.jadieldearmas.codegenerator;
  */
 public abstract class JComment extends JavaTemplateGroup {
 
+	/**
+	 * @param templateName
+	 */
+	JComment(String templateName) {
+		super(templateName);
+		
+	}
+
 	//Keep it like this.
 }

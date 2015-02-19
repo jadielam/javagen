@@ -18,8 +18,8 @@ package com.jadieldearmas.codegenerator;
 public class JCodedBody extends JBody {
 
 	JCodedBody(){
-		super();
-		this.template = super.getInstanceOf("body");
+		super("body");
+		
 	}
 	
 	public JCodeUnit addCodeUnit() throws UnsupportedOperationException {

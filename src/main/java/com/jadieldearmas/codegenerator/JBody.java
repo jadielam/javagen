@@ -19,5 +19,13 @@ package com.jadieldearmas.codegenerator;
  */
 public abstract class JBody extends JavaTemplateGroup {
 
+	/**
+	 * @param templateName
+	 */
+	JBody(String templateName) {
+		super(templateName);
+		
+	}
+
 	//I think that I should leave it empty intentionally.
 }

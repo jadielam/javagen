@@ -23,11 +23,9 @@ public class JCompilationUnit extends JavaTemplateGroup {
 	
 	JCompilationUnit(String compilationUnitName){
 		
-		super();
+		super("compilationUnit");
 		this.compilationUnitName = compilationUnitName;
-		this.template = super.getInstanceOf("compilationUnit");
-		if (null == this.template) System.out.println("this is null");
-		
+			
 	}
 	
 	public static JCompilationUnit createCompilationUnit(String compilationUnitName){

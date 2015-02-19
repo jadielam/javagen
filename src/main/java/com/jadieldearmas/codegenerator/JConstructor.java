@@ -31,17 +31,19 @@ public class JConstructor extends JavaTemplateGroup {
 	JConstructor(String className, String vissibilityModifier,
 			List<Pair<String, String>> someFunctionArguments){
 		
-		super();
-		this.template = super.getInstanceOf("constructor");
-		this.template.add("className", className);
-		this.template.add("vissibilityModifier", vissibilityModifier);
+		super("constructor");
+		
+		this.updatePlaceholder("className", className);
+		this.updatePlaceholder("vissibilityModifier", vissibilityModifier);
+		
 		for (Pair<String, String> argument : someFunctionArguments){
 			ST functionArgumentTemplate = super.getInstanceOf("functionArgument");
 			String argumentType = argument.getFirst();
 			String argumentName = argument.getSecond();
 			functionArgumentTemplate.add("argumentType", argumentType);
 			functionArgumentTemplate.add("argumentName", argumentName);
-			this.template.add("functionArgument", functionArgumentTemplate);
+			this.updatePlaceholder("functionArgument", functionArgumentTemplate.render());
+			
 		}
 		
 	}

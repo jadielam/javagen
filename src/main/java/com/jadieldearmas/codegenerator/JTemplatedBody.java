@@ -18,6 +18,8 @@ import java.util.List;
 /**
  * This class is used to load a body template from a file
  * instead of having to write it programmatically.
+ * 
+ * Testing.
  * @author jdearmas
  *
  * @since  
@@ -27,14 +29,14 @@ public class JTemplatedBody extends JBody {
 	JTemplatedBody(String pathToTemplate, 
 			List<Pair<String, String>> placeholderValues){
 		
-		super();
+		super("templatedBody");
 		STGroupFile fileTemplate = new STGroupFile(pathToTemplate);
-		this.template = fileTemplate.getInstanceOf("templatedBody");
+		
 		
 		for (Pair<String, String> toReplace : placeholderValues){
 			String placeholder = toReplace.getFirst();
 			String value = toReplace.getSecond();
-			this.template.add(placeholder, value);
+			this.addPlaceholder(placeholder, value);
 		}
 	}
 	

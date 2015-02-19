@@ -17,8 +17,8 @@ public class JPackage extends JavaTemplateGroup {
 
 	JPackage(String packageName){
 		
-		super();
-		this.template = super.getInstanceOf("package");
-		this.template.add("packageName", packageName);
+		super("package");
+		
+		this.updatePlaceholder("packageName", packageName);
 	}
 }

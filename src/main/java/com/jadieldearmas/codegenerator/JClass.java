@@ -34,16 +34,16 @@ public class JClass extends JavaTemplateGroup {
 	JClass(String className, String vissibilityModifier, 
 			String extendedClass, List<String> interfaces){
 		
-		super();
+		super("class");
 		this.className = className;
-		this.template = super.getInstanceOf("class");
-		this.template.add("name", className);
-		this.template.add("vissibilityModifier", vissibilityModifier);
-		
+		this.updatePlaceholder("name", className);
+		this.updatePlaceholder("vissibilityModifier", vissibilityModifier);
+				
 		if (null != extendedClass) {
 			ST extendsTemplate = super.getInstanceOf("extends");
 			extendsTemplate.add("extendedClass", extendedClass);
-			this.template.add("extends", extendsTemplate);
+			this.updatePlaceholder("extends", extendsTemplate.render());
+			
 		}
 		
 		if (null != interfaces && 0 < interfaces.size()){
@@ -52,7 +52,8 @@ public class JClass extends JavaTemplateGroup {
 			for (String iMterface : interfaces){
 				implementsTemplate.add("interface", iMterface);
 			}
-			this.template.add("inplements", implementsTemplate);
+			this.updatePlaceholder("implements", implementsTemplate.render());
+			
 		}
 	}
 	

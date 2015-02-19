@@ -17,5 +17,13 @@ package com.jadieldearmas.codegenerator;
  */
 public abstract class JCodeUnit extends JavaTemplateGroup {
 
+	/**
+	 * @param templateName
+	 */
+	JCodeUnit(String templateName) {
+		super(templateName);
+	
+	}
+
 	//I think that it should be empty on purpose.
 }

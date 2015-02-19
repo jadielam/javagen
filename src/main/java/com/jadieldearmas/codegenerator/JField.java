@@ -22,13 +22,14 @@ public class JField extends JavaTemplateGroup {
 	JField(String type, String name, String vissibilityModifier,
 			boolean isFinal, boolean isStatic){
 		
-		super();
-		this.template = super.getInstanceOf("field");
-		this.template.add("type", type);
-		this.template.add("name", name);
-		this.template.add("vissibilityModifier", vissibilityModifier);
-		if (isFinal) this.template.add("isFinal", "final");
-		if (isStatic) this.template.add("isStatic", "static");
+		super("field");
+		
+		this.updatePlaceholder("type", type);
+		this.updatePlaceholder("name", name);
+		this.updatePlaceholder("vissibilityModifier", vissibilityModifier);
+		
+		if (isFinal) this.updatePlaceholder("isFinal", "final");
+		if (isStatic) this.updatePlaceholder("isStatic", "static");
 		
 	}
 	

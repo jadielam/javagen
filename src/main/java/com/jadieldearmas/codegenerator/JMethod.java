@@ -28,14 +28,14 @@ public class JMethod extends JavaTemplateGroup {
 			List<Pair<String, String>> someFunctionArguments, List<String> exceptions){
 		
 		//TODO: Check that some items cannot be null
-		super();
-		this.template = super.getInstanceOf("method");
-		this.template.add("methodName", methodName);
-		this.template.add("vissibilityModifier", vissibilityModifier);
-		this.template.add("returnType", returnType);
-		if (isFinal) this.template.add("isFinal", "final");
-		if (isSynchronized) this.template.add("isSynchronized", "synchronized");
-		if (isStatic) this.template.add("isStatic", "static");
+		super("method");
+		
+		this.updatePlaceholder("methodName", methodName);
+		this.updatePlaceholder("vissibilityModifier", vissibilityModifier);
+		this.updatePlaceholder("returnType", returnType);
+		if (isFinal) this.updatePlaceholder("isFinal", "final");
+		if (isSynchronized) this.updatePlaceholder("isSynchronized", "synchronized");
+		if (isStatic) this.updatePlaceholder("isStatic", "static");
 		
 		for (Pair<String, String> argument : someFunctionArguments){
 			ST functionArgumentTemplate = super.getInstanceOf("functionArgument");
@@ -43,7 +43,7 @@ public class JMethod extends JavaTemplateGroup {
 			String argumentName = argument.getSecond();
 			functionArgumentTemplate.add("argumentType", argumentType);
 			functionArgumentTemplate.add("argumentName", argumentName);
-			this.template.add("functionArgument", functionArgumentTemplate);
+			this.updatePlaceholder("functionArgument", functionArgumentTemplate.render());
 		}
 		
 		
@@ -53,7 +53,7 @@ public class JMethod extends JavaTemplateGroup {
 			for (String eCception : exceptions){
 				throwsTemplate.add("exception", eCception);
 			}
-			this.template.add("throws", throwsTemplate);
+			this.updatePlaceholder("throws", throwsTemplate.render());
 		}
 	}
 	
