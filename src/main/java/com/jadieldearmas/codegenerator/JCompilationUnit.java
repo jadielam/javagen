@@ -8,7 +8,11 @@
 // **************************************************
 package com.jadieldearmas.codegenerator;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.stringtemplate.v4.ST;
 
 /**
  * @author jdearmas
@@ -18,71 +22,78 @@ import java.util.List;
 public class JCompilationUnit extends JavaTemplateGroup {
 
 	private final String compilationUnitName;
-	private boolean isPackageAdded = false;
-	private boolean isClassAdded = false;
 	
-	JCompilationUnit(String compilationUnitName){
+	private Set<String> imports = new HashSet<String>();
+	
+	/**
+	 * Package of this compilation unit
+	 */
+	private String packageName = null;
+	
+		
+	private JCompilationUnit(String compilationUnitName){
 		
 		super("compilationUnit");
 		this.compilationUnitName = compilationUnitName;
-			
 	}
 	
 	public static JCompilationUnit createCompilationUnit(String compilationUnitName){
 		return new JCompilationUnit(compilationUnitName);
 	}
 	
-	public JPackage addPackage(String packageName) throws UnsupportedOperationException {
-		if (!isPackageAdded){
-			
-			JPackage paKkage = new JPackage(packageName);
-			
-			this.addNewChildTemplate("package", paKkage);
-			this.isPackageAdded = true;
-			
-			return paKkage;
-			
-		}
-		else{
-			throw new UnsupportedOperationException("The package has already been added to the compilation unit.");
-		}
+	
+	/**
+	 * Sets the package of the compilation unit.
+	 * @param packageName
+	 * @return
+	 */
+	public JCompilationUnit setPackage(String packageName) {
 		
+		this.packageName = packageName;
+		return this;
 	}
 	
-	public JImport addImport(String importName){
+	public JCompilationUnit addImport(String importName){
 		
-		JImport iNport = new JImport(importName);
-		
-		this.addNewChildTemplate("inport", iNport);
-		
-		return iNport;
+		this.imports.add(importName);
+		return this;
 	}
 	
-	public JClass addClass(String className, String vissibilityModifier,
-			String extendedClass, List<String> interfaces){
-		//TODO: Fix this to make it more realistic to Java.
-		//TODO: AKA: Make differentiation between public classes and other classes in the class
-		//topology that I have designed.
+	public JClass createPublicClass(){
+		
 		//TODO: Also, when making it more realistic to Java, check the issue of having a class
 		//with a name different than the compilation unit name.
-		if (!isClassAdded){
-			
-			JClass claZs = new JClass(className, vissibilityModifier, extendedClass,
-					interfaces);
-			
-			this.addNewChildTemplate("class", claZs);
-			this.isClassAdded = true;
-			
-			return claZs;
-		}
-		else{
-			throw new UnsupportedOperationException("The class has already been added to the compilation unit.");
-		}
+		//TODO: Check the issue of adding different classes to this.
 		
+		JClass claZs = new JClass(this.compilationUnitName);
+		claZs.setPublic();
+		this.addNewChildTemplate("class", claZs);
+		return claZs;
+				
 	}
 	
-	public void addComment(JComment comment) throws UnsupportedOperationException{
-		//TODO;
+	public JCompilationUnit addComment(String comment) throws UnsupportedOperationException{
+		//TODO
 		throw new UnsupportedOperationException("Operation not supported yet.");
+	}
+	
+	@Override
+	public void compile(){
+		
+		if (null != this.packageName){
+			ST packageTemplate = super.getInstanceOf("package");
+			packageTemplate.add("packageName", this.packageName);
+			this.template.add("package", packageTemplate.render());
+		}
+		
+		if (null != this.imports && 0 < this.imports.size()){
+			for (String inport : this.imports){
+				ST importTemplate = super.getInstanceOf("inport");
+				importTemplate.add("importName", inport);
+				this.template.add("inport", importTemplate.render());
+			}
+		}
+		
+		super.compile();
 	}
 }

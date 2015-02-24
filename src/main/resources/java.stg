@@ -17,7 +17,7 @@ extends(extendedClass) ::= "extends <extendedClass>"
 
 inplements(interface) ::= "implements <interface; separator=\", \">"
 
-field(comment, annotation, vissibilityModifier, type, name) ::= "<comment><\n><annotation; separator=\"\n\"><\n><vissibilityModifier> <type> <name>;"
+field(comment, annotation, vissibilityModifier, type, name) ::= "<comment><\n><annotation; separator=\"\n\"><\n><if(vissibilityModifier)><vissibilityModifier> <endif><if(isFinal)><isFinal> <endif> <endif><if(isFinal)><isFinal> <endif><type> <name>;"
 
 constructor(comment, annotation, vissibilityModifier, className, functionArgument, body) ::= 
 "<comment>

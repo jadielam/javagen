@@ -40,28 +40,12 @@ public abstract class JavaTemplateGroup {
 	 * For example, a class template will contain in this map a key by the value "method" and
 	 * a list with all the method templates that belong to the class.
 	 */
-	Map<String, List<JavaTemplateGroup>> childTemplates = new HashMap<String, List<JavaTemplateGroup>>();
-	
-	/**
-	 * This map is used for all the templates that can only hold one value and cannot be repeated.
-	 * For example, the method template will contain a placeholder called vissibilityModifier.
-	 * That placeholder can only hold one value, no matter how many times the user of the API
-	 * adds new vissibility modifiers to a method, only the last value entered is valid.
-	 */
-	Map<String, String> placeholderUpdate = new HashMap<String, String>();
-	
-	/**
-	 * This map is used for all the templates that can hold more than one value, but that
-	 * the value cannot be repeated twice.  For example, the moethod template will contain 
-	 * a placeholder called interface, and its value contains a list of interfaces
-	 * that the class implements.  The same for function arguments and exceptions.
-	 */
-	Map<String, Set<String>> placeholderAdd = new HashMap<String, Set<String>>();
+	private final Map<String, List<JavaTemplateGroup>> childTemplates = new HashMap<String, List<JavaTemplateGroup>>();
 	
 	/**
 	 * This field most be hidden and initialized by the child classes
 	 */
-	private ST template;
+	ST template;
 	
 	JavaTemplateGroup(String templateName){
 		
@@ -75,22 +59,6 @@ public abstract class JavaTemplateGroup {
 	
 	boolean isCompiled(){
 		return this.isCompiled;
-	}
-	
-	void updatePlaceholder(String placeholderName, String placeholderValue){
-		this.placeholderUpdate.put(placeholderName, placeholderValue);
-	}
-	
-	void addPlaceholder(String placeholderName, String placeholderValue){
-		if (this.placeholderAdd.containsKey(placeholderName)){
-			Set<String> values = this.placeholderAdd.get(placeholderName);
-			values.add(placeholderValue);
-		}
-		else{
-			Set<String> values = new HashSet<String>();
-			values.add(placeholderValue);
-			this.placeholderAdd.put(placeholderName, values);
-		}
 	}
 	
 	void addNewChildTemplate(String templateName, JavaTemplateGroup template){
@@ -115,28 +83,11 @@ public abstract class JavaTemplateGroup {
 			//Adding the templates that can be repeated
 			for (Entry<String, List<JavaTemplateGroup>> e : this.childTemplates.entrySet()){
 				String templateName = e.getKey();
-				List<JavaTemplateGroup> ctemplates = e.getValue();
+				List<JavaTemplateGroup> ctemplates_l = e.getValue();
+				Set<JavaTemplateGroup> ctemplates = new HashSet<JavaTemplateGroup>(ctemplates_l);
 				for (JavaTemplateGroup ctemplate : ctemplates){
 					ctemplate.compile();
 					this.template.add(templateName, ctemplate);
-				}
-			}
-			
-			//Adding the unique placeholders
-			for (Entry<String, String> e : this.placeholderUpdate.entrySet()){
-				String placeholderName = e.getKey();
-				String placeholderValue = e.getValue();
-				
-				this.template.add(placeholderName, placeholderValue);
-			}
-			
-			//Adding the repeated placeholders
-			for (Entry<String, Set<String>> e : this.placeholderAdd.entrySet()){
-				String placeholderName = e.getKey();
-				Set<String> values = e.getValue();
-				
-				for (String value : values){
-					this.template.add(placeholderName, value);
 				}
 			}
 			
@@ -152,5 +103,66 @@ public abstract class JavaTemplateGroup {
 		compile();
 		return this.template.render();
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((this.childTemplates == null) ? 0 : this.childTemplates
+						.hashCode());
+		return result;
+	}
+
+	/**
+	 * Only compares templates to determine equality
+	 * (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof JavaTemplateGroup)) {
+			return false;
+		}
+		JavaTemplateGroup other = (JavaTemplateGroup) obj;
+		if (this.childTemplates == null) {
+			if (other.childTemplates != null) {
+				return false;
+			}
+		} else {
+			
+			Set<Entry<String, List<JavaTemplateGroup>>> entries = this.childTemplates.entrySet();
+			
+			for (Entry<String, List<JavaTemplateGroup>> e : entries){
+				String templateName = e.getKey();
+				
+				
+				if (!other.childTemplates.containsKey(templateName)){
+					return false;
+				}
+				
+				List<JavaTemplateGroup> thisTemplates = e.getValue();
+				List<JavaTemplateGroup> otherTemplates = other.childTemplates.get(templateName);
+				Set<JavaTemplateGroup> thisTemplatesSet = new HashSet<JavaTemplateGroup>(thisTemplates);
+				Set<JavaTemplateGroup> otherTemplatesSet = new HashSet<JavaTemplateGroup>(otherTemplates);
+				
+				return (thisTemplatesSet.equals(otherTemplatesSet));
+			}
+			
+			
+		}
+		return true;
+	}
+	
 	
 }
