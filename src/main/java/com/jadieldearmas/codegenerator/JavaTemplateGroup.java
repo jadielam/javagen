@@ -23,12 +23,32 @@ import org.stringtemplate.v4.STGroupFile;
 /**
  * @author jdearmas
  *
- * @since  
+ * Parent class to all the different entities of the java grammar classes.
+ * It is called JavaTemplateGroup because it contains a reference
+ * to the String Template template group where all the different 
+ * Java grammar classes such as JAnnotation, JBody, JComment, JMethod, etc.
+ * are defined.
+ * 
+ * As a template class it sets the tone on how the API is used.  Each
+ * class that extends this class behaves in the following way:
+ * -It contains child templates that can be added during the lifetime of the class
+ * -The class is in flux until the compile method is called.  Once the compile
+ * method is called, any other changes to the class are ignored and do not make
+ * it to the string representation of the class.
+ * -The toString method prints a Java 7 compliant source representation
+ * of the template.
+ * @since 1.0  
  */
 public abstract class JavaTemplateGroup {
 
+	/**
+	 * The template group from where all the templates are obtained
+	 */
 	private final STGroup javaGroup;
 	
+	/**
+	 * Determines if the class is compiled or not.
+	 */
 	private boolean isCompiled = false;
 	
 	/**
@@ -43,24 +63,46 @@ public abstract class JavaTemplateGroup {
 	private final Map<String, List<JavaTemplateGroup>> childTemplates = new HashMap<String, List<JavaTemplateGroup>>();
 	
 	/**
-	 * This field most be hidden and initialized by the child classes
+	 * The template of the class.
 	 */
-	ST template;
+	final ST template;
 	
+	/**
+	 * Constructor that uses the templateName to obtain the template from the template
+	 * group.
+	 * @param templateName the name of the template as it appears in the StringTemplate
+	 * definition.
+	 */
 	JavaTemplateGroup(String templateName){
 		
 		this.javaGroup = new STGroupFile("java.stg");
 		this.template = getInstanceOf(templateName);
 	}
 	
+	/**
+	 * Returns an instance of the template whose name is <code>template</code> and that
+	 * appears in the template group.
+	 * @param template the name of the template
+	 * @return a StringTemplate
+	 */
 	public ST getInstanceOf(String template){
 		return this.javaGroup.getInstanceOf(template);
 	}
 	
+	/**
+	 * Checks if the class is compiled or not
+	 * @return true if it is compiled, false otherwise.
+	 */
 	boolean isCompiled(){
 		return this.isCompiled;
 	}
 	
+	/**
+	 * TODO: Continue here.
+	 * Adds a new child template to the child templates of the class
+	 * @param templateName 
+	 * @param template
+	 */
 	void addNewChildTemplate(String templateName, JavaTemplateGroup template){
 		if (this.childTemplates.containsKey(templateName)){
 			List<JavaTemplateGroup> templates = this.childTemplates.get(templateName);

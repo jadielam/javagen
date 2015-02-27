@@ -19,16 +19,20 @@ import org.stringtemplate.v4.ST;
 /**
  * @author jdearmas
  *
+ * Class that represents a Java annotation
  * @since 0.1
  */
 public class JAnnotation extends JavaTemplateGroup {
 
 	/**
-	 * Testing
-	 * Constructor for annotation
+	 * The name of the annotation
 	 */
 	private final String name;
 	
+	/**
+	 * The set of attributeValue pairs.
+	 * TODO: See what are the rules for annotation pairs in Java.
+	 */
 	private Set<Pair<String, String>> attributeValuePairs;
 
 	/**
@@ -43,18 +47,33 @@ public class JAnnotation extends JavaTemplateGroup {
 		this.attributeValuePairs = new HashSet<Pair<String, String>>();
 	}
 	
+	/**
+	 * Adds an attribute name and an attribute value to the annotation.
+	 * When annotation is empty, it looks like this:
+	 * <code>@name</code>
+	 * 
+	 * When annotation has attributes, it looks like this:
+	 * <code>@name(attributeName="attributeValue")</code>
+	 * 
+	 * When more than one attribute is added, they are separated by commas:
+	 * <code>@name(attributeName1="attributeValue1", attributeName2="attributeValue2")</code>
+	 * 
+	 * @param attributeName the name of the attribute
+	 * @param attributeValue the value of that attribute.
+	 * @return this annotation
+	 */
 	public JAnnotation addAttribute(String attributeName, String attributeValue){
 		this.attributeValuePairs.add(new Pair<String, String>(attributeName, attributeValue));
 		return this;
 	}
 
 	/**
-	 * 
+	 * @see JavaTemplateGroup#compile()
 	 */
 	@Override
 	public void compile(){
 				
-		for (Pair<String, String> attributeValue : attributeValuePairs){
+		for (Pair<String, String> attributeValue : this.attributeValuePairs){
 			ST attributeValueTemplate = super.getInstanceOf("attributeValue");
 			String attribute = attributeValue.getFirst();
 			String value = attributeValue.getSecond();
@@ -66,7 +85,7 @@ public class JAnnotation extends JavaTemplateGroup {
 		super.compile();
 	}
 
-	/* (non-Javadoc)
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -81,8 +100,9 @@ public class JAnnotation extends JavaTemplateGroup {
 	/** 
 	 * It uses only the name of an annotation to determine equality. 
 	 * The reason is that Java does not allow one same annotation repeated
-	 * multiple times, regardless of the number of parameters
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * multiple times, regardless of the number of parameters.
+	 * TODO: Java 7 might not allow repeated annotations, but Java 8 does.
+	 * @see JavaTemplateGroup#compile()
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -105,7 +125,5 @@ public class JAnnotation extends JavaTemplateGroup {
 		}
 		return true;
 	}
-
-
 	
 }
