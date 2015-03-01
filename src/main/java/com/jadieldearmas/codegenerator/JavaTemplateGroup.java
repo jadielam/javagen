@@ -47,11 +47,6 @@ public abstract class JavaTemplateGroup {
 	private final STGroup javaGroup;
 	
 	/**
-	 * Determines if the class is compiled or not.
-	 */
-	private boolean isCompiled = false;
-	
-	/**
 	 * Key: is the name of the template placeholder in the java.stg file
 	 * Value: is a list with all the templates that will be added to the placeholder in key.
 	 * 
@@ -90,14 +85,6 @@ public abstract class JavaTemplateGroup {
 	}
 	
 	/**
-	 * Checks if the class is compiled or not
-	 * @return true if it is compiled, false otherwise.
-	 */
-	boolean isCompiled(){
-		return this.isCompiled;
-	}
-	
-	/**
 	 * TODO: Continue here.
 	 * Adds a new child template to the child templates of the class
 	 * @param templateName 
@@ -119,26 +106,25 @@ public abstract class JavaTemplateGroup {
 	 * string that will go there. Since a template will have other templates inside of it
 	 * as attribute references, it first needs to compile those child templates before
 	 * substituting the corresponding attribute reference by the value from its template.
+	 * TODO: There is a behavior that is undefined here, at least in my mind:
+	 * If a list of templates has two templates that are equal, which one is the one kept
+	 * by the conversion to the set method?
 	 */
 	void compile(){
-		if (!isCompiled()){
-			//Adding the templates that can be repeated
-			for (Entry<String, List<JavaTemplateGroup>> e : this.childTemplates.entrySet()){
-				String templateName = e.getKey();
-				List<JavaTemplateGroup> ctemplates_l = e.getValue();
-				Set<JavaTemplateGroup> ctemplates = new HashSet<JavaTemplateGroup>(ctemplates_l);
-				for (JavaTemplateGroup ctemplate : ctemplates){
-					ctemplate.compile();
-					this.template.add(templateName, ctemplate);
-				}
+		//Adding the templates that can be repeated
+		for (Entry<String, List<JavaTemplateGroup>> e : this.childTemplates.entrySet()){
+			String templateName = e.getKey();
+			List<JavaTemplateGroup> ctemplates_l = e.getValue();
+			Set<JavaTemplateGroup> ctemplates = new HashSet<JavaTemplateGroup>(ctemplates_l);
+			for (JavaTemplateGroup ctemplate : ctemplates){
+				ctemplate.compile();
+				this.template.add(templateName, ctemplate);
 			}
-			
-			this.isCompiled = true;
 		}
 	}
 	
-	/**s
-	 * 
+	/**
+	 * Returns the string representation of this model as java source code.
 	 */
 	@Override
 	public String toString(){
@@ -146,7 +132,8 @@ public abstract class JavaTemplateGroup {
 		return this.template.render();
 	}
 
-	/* (non-Javadoc)
+	/** 
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -162,7 +149,7 @@ public abstract class JavaTemplateGroup {
 
 	/**
 	 * Only compares templates to determine equality
-	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
