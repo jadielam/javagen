@@ -9,8 +9,6 @@
 package com.jadieldearmas.codegenerator;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.stringtemplate.v4.ST;
@@ -18,15 +16,20 @@ import org.stringtemplate.v4.ST;
 
 /**
  * @author jdearmas
+ * 
+ * Model that represents a Java class
  *
- * @since 0.1
+ * @since 1.0
  */
 public class JClass extends JavaTemplateGroup {
 
+	/**
+	 * The name of the class
+	 */
 	private final String className;
 	
 	/**
-	 * Can take values either "public" or "private"
+	 * The visibility of the class. Can take values either "public" or "private" or null.
 	 */
 	private String vissibilityModifier = null;
 	
@@ -39,14 +42,10 @@ public class JClass extends JavaTemplateGroup {
 	 * The interfaces that this class implements.
 	 */
 	private Set<String> interfaces = new HashSet<String>();
+	
 	/**
-	 * 
-	 * 
-	 * 
+	 * Constructor that creates a Class model. It takes the name of the class as parameter.
 	 * @param className the name of the class
-	 * @param vissibilityModifier the visibility of the class
-	 * @param interfaces the class implements
-	 * @param extendedClass class the class extends
 	 */
 	JClass(String className){
 		
@@ -55,31 +54,53 @@ public class JClass extends JavaTemplateGroup {
 		
 	}
 	
+	/**
+	 * makes the class public
+	 * @return
+	 */
 	public JClass setPublic(){
 		
 		this.vissibilityModifier = "public";
 		return this;
 	}
 	
+	/**
+	 * Makes the class private
+	 * @return
+	 */
 	public JClass setPrivate(){
 		
 		this.vissibilityModifier = "private";
 		return this;
 	}
 	
-		
+	
+	/**
+	 * Sets the name of the superclass that this class extends
+	 * @param extendedClass the name of the extended super class.
+	 * @return Returns <code>this</code> class model
+	 */
 	public JClass setSuperclass(String extendedClass){
 		
 		this.extendedClass = extendedClass;
 		return this;
 	}
 	
+	/**
+	 * Adds an interface name to the list of interfaces implemented by this class.
+	 * @param iMterface the name of the interface
+	 * @return Returns <code>this<code> class model
+	 */
 	public JClass addInterface(String iMterface){
 		
 		this.interfaces.add(iMterface);
 		return this;
 	}
 	
+	/**
+	 * Adds a public constructor to the class
+	 * @return Returns the constructor model that was created
+	 */
 	public JConstructor addPublicConstructor(){
 		
 		JConstructor constructor = new JConstructor(this.className);
@@ -89,14 +110,25 @@ public class JClass extends JavaTemplateGroup {
 		return constructor;
 	}
 	
-	public JField addField(String type, String name, String vissibilityModifier,
-			boolean isFinal, boolean isStatic){
+	/**
+	 * Adds a new field to the class.
+	 * @param type The Java type of the new field
+	 * @param name The identifier or name of the new field
+	 * @return Returns the field model that was created
+	 */
+	public JField addField(String type, String name){
 		
 		JField field = new JField(type, name);
 		this.addNewChildTemplate("field", field);
 		return field;
 	}
 	
+	/**
+	 * Adds a new method to the class
+	 * @param methodName the name of the method 
+	 * @param returnType the return type of the method
+	 * @return Returns the method model that was created
+	 */
 	public JMethod addMethod(String methodName, String returnType){
 		
 		JMethod method = new JMethod(methodName, returnType);
@@ -106,7 +138,12 @@ public class JClass extends JavaTemplateGroup {
 		return method;
 	}
 	
-	public JAnnotation addAnnotation(String name, List<Pair<String, String>> attributeValues){
+	/**
+	 * Adds a new annotation to the class
+	 * @param name the name of the annotation
+	 * @return Returns the annotation model that was created.
+	 */
+	public JAnnotation addAnnotation(String name){
 		
 		JAnnotation annotation = new JAnnotation(name);
 		
@@ -115,17 +152,23 @@ public class JClass extends JavaTemplateGroup {
 		return annotation;
 	}
 	
-
+	
+	/**
+	 * Adds a new comment to the class
+	 * @return the comment model that was created
+	 * @throws UnsupportedOperationException at any time the method is called, because
+	 * the method is not yet supported.
+	 */
 	public JComment addComment() throws UnsupportedOperationException{
 		//TODO
 		throw new UnsupportedOperationException("Operation not yet supported");
 	}
 	
 	/**
-	 * compiles the template
+	 * Compiles the class template.
 	 */
 	@Override
-	public void compile(){
+	void compile(){
 		
 		this.template.add("name", this.className);
 		this.template.add("vissibilityModifier", this.vissibilityModifier);
@@ -159,7 +202,8 @@ public class JClass extends JavaTemplateGroup {
 	}
 
 	/** 
-	 * (non-Javadoc)
+	 * Implements equality based only on the className field.
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -181,7 +225,5 @@ public class JClass extends JavaTemplateGroup {
 		}
 		return true;
 	}
-	
-	
 	
 }
