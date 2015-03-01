@@ -120,7 +120,7 @@ public abstract class JavaTemplateGroup {
 	 * as attribute references, it first needs to compile those child templates before
 	 * substituting the corresponding attribute reference by the value from its template.
 	 */
-	public void compile(){
+	void compile(){
 		if (!isCompiled()){
 			//Adding the templates that can be repeated
 			for (Entry<String, List<JavaTemplateGroup>> e : this.childTemplates.entrySet()){
