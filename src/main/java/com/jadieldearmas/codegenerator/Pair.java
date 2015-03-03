@@ -1,31 +1,60 @@
 package com.jadieldearmas.codegenerator;
 
 class Pair<F, S> {
-    private F first; //first member of pair
-    private S second; //second member of pair
+    
+	/**
+	 * First member of pair
+	 */
+	private F first;
+	
+	/**
+	 * Second member of pair
+	 */
+    private S second; 
 
+    /**
+     * Creates a pair given its two elements.
+     * @param first the first member of the pair
+     * @param second the second member of the pair
+     */
     public Pair(F first, S second) {
         this.first = first;
         this.second = second;
     }
 
+    /**
+     * Sets the first member
+     * @param first the first member of the pair
+     */
     public void setFirst(F first) {
         this.first = first;
     }
 
+    /**
+     * Sets the second member
+     * @param second the second member of the pair
+     */
     public void setSecond(S second) {
         this.second = second;
     }
 
+    /**
+     * Returns the first member of the pair
+     * @return the first member
+     */
     public F getFirst() {
-        return first;
+        return this.first;
     }
 
+    /**
+     * Returns the second member of the pair
+     * @return the second member
+     */
     public S getSecond() {
-        return second;
+        return this.second;
     }
 
-	/* (non-Javadoc)
+	/** 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -39,7 +68,8 @@ class Pair<F, S> {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Equality based on the equals method of the first and of the second member. 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

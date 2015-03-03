@@ -100,6 +100,8 @@ public class JConstructor extends JavaTemplateGroup {
 	
 	/**
 	 * Adds an argument to the constructor.
+	 * TODO: Fix the bug of allowing multiple arguments with the same name to
+	 * be added.
 	 * @param argumentType The Java type of the argument
 	 * @param argumentName The name/identifier of the argument
 	 * @return Returns <code>this</code> constructor model.
@@ -113,10 +115,12 @@ public class JConstructor extends JavaTemplateGroup {
 	 * This method adds a body to the constructor as text.
 	 * TODO: Remove the throwing of exception and just replace the previous body of the
 	 * constructor. I don't know. This one looks complex.
+	 * TODO: Think better the issue with the exception. Maybe is a good thing to throw it.
 	 * 
 	 * The body of the Constructor can be added only once.
-	 * @param body of the constructor
+	 * @param bodyText The text of the body of the constructor
 	 * @throws UnsupportedOperationException thrown whenever the body
+	 * @return Returns <code>this</code> JConstructor
 	 * of this Constructor has already been added.
 	 */
 	public JConstructor setTextBody(String bodyText) throws UnsupportedOperationException{
@@ -126,9 +130,8 @@ public class JConstructor extends JavaTemplateGroup {
 			this.textBody = bodyText;
 			return this;
 		}
-		else{
-			throw new UnsupportedOperationException("The body of the constructor has already been added");
-		}
+		
+		throw new UnsupportedOperationException("The body of the constructor has already been added");
 	}
 	
 	/**
@@ -145,9 +148,8 @@ public class JConstructor extends JavaTemplateGroup {
 			this.textBody = null;
 			return body;
 		}
-		else{
-			throw new UnsupportedOperationException("The body of the constructor has been added already.");
-		}
+		
+		throw new UnsupportedOperationException("The body of the constructor has been added already.");
 	}
 	
 	/**
@@ -261,6 +263,4 @@ public class JConstructor extends JavaTemplateGroup {
 		}
 		return true;
 	}
-	
-	
 }
